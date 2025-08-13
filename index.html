@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #box {
+        height: 100vh;
+      }
+      .container {
+        width: auto;
+        background-color: orange;
+        padding: 1rem;
+        margin-top: 1rem;
+      }
+      form {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        z-index: 99;
+        height: 8rem;
+        padding: 0.5rem;
+        display: flex;
+      }
+      form textarea {
+        width: 100%;
+        height: 100%;
+      }
+      span {
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Ini Comment Section</h1>
+    <hr />
+    <div id="box"></div>
+    <form action="">
+      <textarea name="komen" id="komen" placeholder="Tulis Komentar"></textarea>
+      <button type="button" id="btn" class="btn">Klik</button>
+    </form>
+  </body>
+  <script>
+    let komentars = JSON.parse(localStorage.getItem("komentar")) || [];
+    let aktif = JSON.parse(localStorage.getItem("aktif"));
+    let div = document.getElementById("box");
+    // input komen
+    document.getElementById("btn").onclick = () => {
+      const komen = document.getElementById("komen");
+      let komenValue = komen.value;
+      let komentar = {
+        id: Date.now(),
+        username: aktif.username,
+        komen: komenValue,
+      };
+      komentars.push(komentar);
+      localStorage.setItem("komentar", JSON.stringify(komentars));
+      location.reload();
+    };
+    // output komen
+    komentars.forEach((komentar, index) => {
+      let container = document.createElement("div");
+      container.classList.add("container");
+
+      let username = document.createElement("span");
+      username.classList.add("nama");
+      username.textContent = komentar.username;
+
+      let tanggal = document.createElement("span");
+      tanggal.classList.add("tgl");
+      tanggal.textContent = komentar.tanggal;
+
+      let deskripsi = document.createElement("p");
+      deskripsi.classList.add("komen");
+      deskripsi.textContent = komentar.komen;
+
+      container.appendChild(username);
+      container.appendChild(deskripsi);
+
+      if (komentar.username === aktif.username) {
+        let hapus = document.createElement("span");
+        hapus.classList.add("sampah");
+        hapus.innerHTML = "<i>sampah</i>";
+        hapus.onclick = () => {
+            komentars.splice(index, 1);
+            localStorage.setItem("komentar", JSON.stringify(komentars));
+            location.reload();
+        };
+        container.appendChild(hapus);
+        let edit = document.createElement("span");
+        edit.classList.add("edit");
+        edit.innerHTML = "<i>pensil</i>";
+        edit.onclick = () => {
+            let komenEdit = prompt("Edit pesan");
+            komentars[index] = {id: komentars[index].id, username: aktif.username, komen: komenEdit};
+            localStorage.setItem("komentar", JSON.stringify(komentars));
+            location.reload();
+        };
+        container.appendChild(edit);
+      }
+
+      div.appendChild(container);
+    });
+  </script>
+</html>

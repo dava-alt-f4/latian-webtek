@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>login</title>
+    <style>
+      p {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Login</h1>
+    <p id="errorMsg"></p>
+    <form action="">
+      <input type="text" placeholder="Username" id="username" /><br />
+      <input type="text" placeholder="Password" id="password" /><br />
+      <button type="button" id="btn" class="btn">Klik</button>
+    </form>
+  </body>
+  <script>
+    const username = document.getElementById("username");
+    const password = document.getElementById("password");
+    let error = document.querySelector("#errorMsg");
+    document.getElementById("btn").onclick = () => {
+      uValue = username.value;
+      pValue = password.value;
+      //   cek user
+      let data = JSON.parse(localStorage.getItem("user")) || [];
+      let login = { username: uValue, password: pValue };
+      let cekUser = data.some((item) => item.username === login.username);
+      let cekPassword = data.some((item) => item.password === login.password);
+
+      if (!cekUser) {
+        error.innerHTML = "username atau password salah.";
+      } else {
+        // validasi password
+        if (!cekPassword) {
+          error.innerHTML = "username atau password salah.";
+        } else {
+          localStorage.setItem("aktif", JSON.stringify(login));
+          window.location.href = "index.html";
+        }
+      }
+    };
+  </script>
+</html>

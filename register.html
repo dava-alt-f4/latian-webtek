@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Regis</title>
+    <style>
+      #errorMsg {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Register</h1>
+    <p id="errorMsg"></p>
+    <form action="">
+      <input type="text" placeholder="Username" id="username" /><br />
+      <input type="text" placeholder="Password" id="password" /><br />
+      <button type="button" id="btn" class="btn">Klik</button>
+    </form>
+  </body>
+  <script>
+    const username = document.getElementById("username");
+    const password = document.getElementById("password");
+    let error = document.querySelector("#errorMsg");
+    document.getElementById("btn").onclick = () => {
+      uValue = username.value;
+      pValue = password.value;
+      // cek username
+      let data = JSON.parse(localStorage.getItem("user")) || [];
+      let userBaru = { username: uValue, password: pValue };
+      let cek = data.some((item) => item.username === userBaru.username);
+
+      if (cek) {
+        error.innerHTML = "username sudah digunakan.";
+      } else {
+        // validasi password
+        if (pValue.length < 6) {
+          error.innerHTML = "Password harus setidaknya 6 karakter";
+        } else {
+          data.push(userBaru);
+          localStorage.setItem("user", JSON.stringify(data));
+          window.location.href = "login.html";
+        }
+      }
+    };
+  </script>
+</html>
